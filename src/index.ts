@@ -1,27 +1,22 @@
 import { LoggerService } from './services/logger.service';
-import { TestService } from './services/test.service';
+import {App} from './server';
+import * as winston from 'winston';
 
 export class Run {
     // Variables available in the class
-    private _testSVC;
-    private _logger;
+    private _logger: winston.Logger;
+    private port = 8080;
 
     constructor() {
-        // Setting up the test service
-        this._testSVC = new TestService();
-
         // Setting up the logger service
         this._logger = new LoggerService().logger;
     }
 
     // Entrypoint for the application
     public runSequence() {
-        // Getting a response from the test service
-        const foo = this._testSVC.testService('Sondre');
-
-        // Logging the response from the test service
-        this._logger.info(foo);
-
+        new App().app.listen(this.port, () => {
+            this._logger.info(`Server started on port ${this.port}`);
+        });
     }
 }
 
